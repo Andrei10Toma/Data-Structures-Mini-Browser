@@ -1,0 +1,45 @@
+set_band 123
+newtab
+newtab
+newtab
+deltab
+change_tab 0
+print_open_tabs
+goto google.com
+goto facebook.com
+goto lucian.com
+newtab
+goto salut.com
+goto muie.com
+goto cacat.ro
+change_tab 2
+goto telefon.com
+change_tab 0
+print_open_tabs
+back
+print_open_tabs
+back
+print_open_tabs
+change_tab 3
+back
+print_open_tabs
+back
+print_open_tabs
+change_tab 0
+forward
+print_open_tabs
+forward
+print_open_tabs
+change_tab 3
+forward
+forward
+print_open_tabs
+change_tab 0
+back
+print_open_tabs
+history
+history
+del_history 3
+history
+change_tab 0
+list_dl

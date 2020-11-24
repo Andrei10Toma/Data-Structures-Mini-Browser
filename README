@@ -1,0 +1,301 @@
+TOMA Andrei - 311CB
+
+
+	Am implementat tema cu ajutorul mai multor fisiere: coada.h, coada.c, 
+stiva.h, stiva.c, lista_generica.h, lista_generica.c, utils.c, utils.h, 
+structures.h, functii.c si main.c.
+________________________________________________________________________________
+
+	coada.h:
+
+	In acest fisier header am definit structura de tip coada, macrourile 
+care determina dimensiunea unui element din coada, adresa inceputului cozii, 
+adresa sfarsitului cozii si testul de coada vida si, de asemenea, sunt
+definite antetele functiilor.
+
+
+	coada.c:
+
+	In acest fisier sursa se afla implementate functiile (operatiile 
+standard) care se pot aplica pe cozi.
+	
+	void *InitQ(int d) - functia initializeaza o coada (vida) care contine 
+elemente de dimensiune d si o returneaza la final. Mai intai am alocat spatiu 
+pentru coada dupa care am setat campul dime (dimensiunea unui element din 
+coaada) cu valoarea lui d. Campurile ic (inceputul cozii) si sc (sfarsitul
+cozii) sunt setate pe NULL.
+
+	int IntrQ(void *c, void *ae) - aceasta functie adauga la finalul cozii 
+c valoarea alocata de la adresa ae. Se aloca o celula (aux) si informatia din 
+aceasta, in campul info este copiata valoarea de la adresa ae si campul urm 
+este setat pe NULL. Dupa aceea celula aux este introdusa in coada. Functia 
+returneaza 1 daca introducerea a fost facuta cu succes si 0 in caz contrar.
+
+	int ExtrQ(void *c, void *ae) - extrage primul element din coada in zona 
+alocata de la adresa ae. Se retine inceputul cozii intr-o variabila auxiliara, 
+dupa care inceputul cozii este actualizat. Este copiata informatia din 
+variabila auxiliara in zona alocata de la adresa ae, dupa care este eliberata 
+memoria pentru vechiul inceput al cozii retinut in variabila auxiliara. Functia 
+intoarce 1 daca operatia a fost facuta cu succes si 0 in caz contrar.
+
+	void AfiQ(void *c, void (*Afis)(void *, FILE *), void (*Distr)(void *),
+FILE *out) - functia afiseaza toate informatiile retinute in coada in fisierul 
+out. Deoarece coada c nu trebuie sa fie modificata am initializat o coada 
+auxiliara si am alocat o zona de memorie de dimensiunea unui element din coada 
+in care sa fie extrase informatiile din coada. Cat timp exista elemente de 
+extras din coada sunt afisate in fisierul out cu ajutorul functiei Afis si sunt 
+introduse in coada auxiliara. Este eliberata memoria pentru elementul in care 
+am extras informatia dupa care este refacuta coada c cu ajutprul functiei 
+ConcatQ si este distrusa coada auxiliara.
+
+	int ConcatQ(void *ad, void *as) - concateneaza cele 2 cozi (coada sursa 
+in coada destinatie).  Daca destinatia este vida atunci inceputul si sfarsitul 
+cozii destinatie devin inceputul, respectiv sfarsitul cozii sursa. Daca coada 
+sursa este vida nu se poate face operatia. Daca niciuna dintre cozi nu este 
+vida atunci sunt actualizate legaturile. Inceputul cozii ramane acelasi. Se 
+adauga la coada destinatie coada sursa, se modifica sfarsitul cozii destinatie 
+devenind sfarsitul cozii sursa si inceputul si sfarsitul cozii sursa sunt 
+setate pe NULL. Functia intoarce 1 daca operatia a fost facuta cu succes si 
+0 in caz contrar.
+
+	void ResetQ(void *c, void (*Distr)(void *)) - reseteaza coada c. 
+Inceputul si sfarsitul cozii sunt setate pe NULL si este distrusa intreaga 
+lista. Coada c devine coada vida.
+	
+	void DistrQ(void **c, void (*Distr)(vodi *)) - distruge intrega coada 
+c. Intai este resetata cu ajutorul functiei ResetQ si dupa este eliberat 
+spatiul alocat pentru structura de coada propriu zisa.
+	
+	void SortQ(void *c, int (*cmp)(void *), void *res) - insereaza
+elementul res in coada sortata c dupa criteriul cmp (insert sort). In cazul in 
+care coada este vida este introdus elementul res in coada c. Altfel, ne vom
+folosi de o coada auxiliara c1. Daca elementul pe care dorim sa il introducem
+in coada este mai mare decat elementul de la inceputul cozii, atunci extragem
+elemente din coada c si le introducem in coada c1 pana cand valoarea de la 
+inceputul cozii este mai mare sau egala decat valoarea elementului pe care
+dorim sa il introducem. Dupa introducem elementul res in coada auxiliara c1.
+Altfel daca elementul pe care dorim sa il introducem este mai mic sau egal 
+decat valoarea de la inceputul cozii va trebui sa  extragem toate elementele 
+din coada c si sa le introducem in c1 pentru ca res sa se afle la inceputul 
+cozii c. In final, este refacuta coada c si este eliberata memoria pentru coada
+c1 si pentru variabila x alocata pentru a extrage din coada c.
+________________________________________________________________________________
+
+	stiva.h:
+
+	In acest fisier header am definit structura de tip stiva, macrourile 
+care determina varful stivei, dimensiunea unui element din stiva si daca stiva 
+este vida. De asemenea, am definit antetele functiilor.
+
+
+	stiva.c:
+	
+	In acest fisier sursa sunt implementate functiile (operatiile standard) 
+care se pot aplica pe stive.
+
+	void *InitS(int d) - initializeaza stiva (vida) care va contine 
+elemente de dimensiunea d. Se aloca o stiva s si campul dime este setat cu d si 
+varful stivei cu NULL. Functia returneaza stiva.
+
+	int Push(void *a, void *ae) - aceasta functie adauga in stiva valoarea 
+alocata de la adresa ae. Se aloca o celula auxiliara si alocam, de asemenea, si
+campul informatiei. Copiem in campul info valoarea de la adresa ae, adaugam 
+celula auxiliara in stiva si actualizam varful pe celula auxiliara tocmai 
+adaugata. Functia intoarce 1 daca adaugarea a fost facuta cu succes si 0 in caz 
+contrar.
+	
+	int Pop(void *a, void *ae) - functia extrage un element din stiva a si 
+ii copiaza informatia in zona alocata de la adressa ae. Se retine intr-o 
+variabila auxiliara varful stivei dupa care varful stivei este actualizat cu 
+urmatorul element. In final este eliberata memoria. Functia returneaza 1 daca 
+extragerea a fost facuta cu succes si 0 in caz contrar.
+
+	void AfiS(void *a, void(*Afis)(void *, FILE *), void (*Distr)(void *), 
+FILE *out) - functia afiseaza in fisierul out toate informatiile din stiva a. 
+Cat timp stiva nu e vida se extrag elemente din coada, se afiseaza cu ajutorul 
+functiei Afis si sunt introduse in stiva auxiliara x. La final se reface stiva 
+initiala a si se elibereaza memoria pentru variabila in care am extras si 
+pentru stiva auxiliara folosita.
+
+	void ResetS (void *a, void (*Distr)(void *)) - aceasta functie 
+transforma stiva a in stiva vida. Distruge lista cu ajuttorul functiei Distr si 
+varful este setat pe NULL.
+
+	void DistrS (void **a, void (*Distr)(void *)) - reseteaza stiva si dupa 
+elibereaza spatiul ocupat de stiva.
+
+	int Rastoarna(void *ad, void *as) - daca stivele nu au elemente de 
+aceeasi dimensiune sau daca stiva sursa este vida nu se face rasturnarea. 
+Altfel, cat timp stiva sursa este nevida retine intr-o variabila auxiliara 
+varful stivei sursa, actualizeaza varful stivei, se leaga valoarea auxiliara in 
+stiva destinatie si se actualizeaza varful destinatie. In final, se seteaza 
+varful stivei sursa pe NULL. Functia intoarce 1 daca rasturnarea stivei sursa 
+in stiva destinatie a fost facuta cu succes si 0 in caz contrar.
+________________________________________________________________________________
+
+	lista_generica.h:
+
+	In acest fisier header este definita structura de tip lista generica 
+si, de asemenea, antetul functiei care distruge lista.
+
+	
+	lista_generica.c:
+
+	In acest fisier sursa este implementata functia care distruge o lista
+simplu inlantuita generica.
+
+	void DistrugeL(ACelSt *l, void (*freeinfo)(void *)) - se parcurge 
+fiecare element din lista si se elibereaza pe rand fiecare element (mai intai
+informatia cu ajutorul functiei freeinfo si dupa este eliberata celula).
+________________________________________________________________________________
+
+	structures.h si utils.h:
+
+	In aceste fisiere header sunt definite structurile cu ajutprul carora 
+voi implementa browserul: structura de pagina web (TWebPage), structura unui
+tab (TTab), structura de resurse (Resource). De asemenea, am definit si niste
+macrouri care determina paginea curenta, stiva de back, stiva de forward si
+resursa din varful cozii de prioritate. Pe langa acestea, sunt definite si
+antetele functiilor cu care voi lucra pentru prelucrarea browserului. In 
+implementarea facuta de mine lista de taburi a fost implementata cu ajutorul
+unei liste generice.
+
+
+	functii.c si utils.c:
+
+	int Remaining(void *x) - returneaza diferenta dintre dimensiunea
+resursei si cat s-a descarcat din aceasta.
+
+	void AfisareWebPage(void *x, FILE *out) - afiseaza url-ul paginii web
+in fisierul out.
+
+	void DistrugeWebPage(void *x) - elibereaza memoria pentru un element
+de tip TWebPage. Mai intai elibereaza vectorul de resurse, iar dupa intreaga
+pagina web.
+	
+	void AfisareResurse(void *x, FILE *out) - afiseaza resursele in curs
+de descaracare in fisierul out.
+
+	void AfisareResursaDescarcata (void *x, FILE *out) - afiseaza resursele
+descarcate in fisierul out.
+
+	void DistrugeInfo(void *x) - functie care distruge un tab. Mai intai
+sunt distruse cele 2 stive (cea de back si cea de forward), iar dupa daca
+pagina curenta este alocata atunci distruge pagina web de la current_page. In
+final, este eliberata memoria pentru intreg tabul.
+
+	TTab *alocaTab() - aceasta functie aloca un element de tip tab si
+initializeaza cele 2 stive: cea de back si cea de forward cu dimensiunea unui
+element de tip TWebPage. In final, returneaza tabul.
+
+	ACelSt InitBrowser() - functia aceasta iniializeaza browserul care
+contine un tab deschis care nu are referinta catre nicio pagina web si are cele
+2 stive initializate. Este alocata o celula din lista si dupa campul info este
+alocat cu ajutorul functiei definite mai sus (alocaTab). In final este 
+returnata celula.
+
+	int newtab(ACelSt l, ACelSt *current_tab) - aceasta functie creeaza un
+tab nou gol si il adauga la finalul listei de taburi. Pentru a crea noul tab
+am folosit functia InitBrowser, iar dupa am determinat ultimul element din
+lista, am legat tabul nou creat in lista de taburi si am setat tabul curent pe
+noul tab inttrodus.
+
+	void deltab(ACelSt l, ACelSt *current_tab, void (*freeInfo)(void *)) - 
+aceasta functie sterge ultimul element din lista de taburi. Este determinat
+penultimul element, dupa care in cazul in care *current_tab se afla pe tabul
+care urmeaza sa fie sters este mutat pe penultima pozitie. Dupa aceea urmeaza
+eliminarea celulei (refacerea legaturilor si eliberarea memoriei pentru celula
+eliminata cu ajutorul functiei freeInfo).
+
+	void change_tab (ACelSt l, ACelSt *current_tab, int index_tab) - 
+schimba tabul curent cu elementul din lista la pozitia index_tab din lista de
+taburi. Este parcursa lista pana cand se ajunge pe pozitia index_tab, dupa care
+este actualizat *current_tab cu celula de pe pozitia index_tab.
+
+	void print_open_tabs(ACelSt l, FILE *out) - se parcurge fiecare tab din
+lista de taburi si daca exista pagina deschisa in tabul curent este afisat
+mesajul respectiv, iar in caz contrar alt mesaj.
+
+	void go_to(ACelSt current_tab, char *url, void *global_history, 
+	void *priorityQ, void *downloadQ, int bandwidth) - daca pagina curenta
+este setata pe NULL este alocata, altfel, daca este o pagina web deschisa in
+tabul curent pagina respectiva este pusa in stiva de back si stiva de forward
+este resetata. Mai departe, este copiat in campul url al paginii curente
+valoarea url data ca parametru, se genereaza vectorul de resurse cu ajutorul
+functiei din utils.c si campul num_res al paginii curente este egal cu valoarea
+pe care o are a doua functiei din utils.c. In final, url-ul este introdus in
+coada istoricului global si se apeleaza functia wait pentru o secunda.
+
+	void back(ACelSt current_tab, FILE *out) - daca stiva este vida 
+afiseaza mesajul de eroare in fisierul out. Alfel, este pusa in stiva de
+forward pagina curenta si pagina curenta devine elementul extras din stiva de
+back.
+
+	void forward (ACelSt current_tab, FILE *out) - daca stiva este vida
+afiseaza mesajul de eroare in fisierul out. Altfel, pagina web curenta este
+pusa in stiva de back si pagina curenta devine elementul extras din stiva de
+forward.
+
+	void history (void *global_history, FILE *out) - afiseaza coada
+istoricului global in fisierul out.
+
+	void delete_history(void *global_history, int entries) - sterge din
+coada istoricului global entries intrari. Daca entries este 0 coada istoricului
+global este resetata. Altfel extragem din coada entries elemente. In final, 
+eliberam memoria.
+
+	void list_dl (ACelSt current_tab, FILE *out) - afiseaza toate resursele
+descarcabile din pagina web curent deschisa.
+
+	void download(void *priorityQ, unsigned int index, ACelSt current_tab)
+- introduce resursa cu indexul index in coada de prioritati cu ajutorul
+functiei SortQ.
+
+	void downloads(void *priorityQ, void *DownloadQ, FILE *out) - afiseaza
+coada de prioritati care contine resurse in curs de descarcare cat si coada de
+resurse descarcate in fisierul out cu ajutorul functiei AfiQ.
+
+	void wait(void *priorityQ, void *downloadQ, int seconds, int bandwidth)
+- dimensiunea care poate sa fie descarcata (download_size) este egala cu 
+seconds*bandwidth. Cat timp dimensiunea care poate fi descarcata este mai mare 
+decat 0, daca este suficient pentru a descarca intreaga resursa din coada de
+prioritati este actualizat download_size, campul currently_downloaded devine
+dimensiunea intregii resurse si extragem resursa din coada de prioritati si o
+introducem in coada de descracari finalizate. Altfel daca download_size nu este
+suficient pentru a descarca intreaga resursa adunam la campul 
+currently_downloaded download_size si download_size devine 0.
+________________________________________________________________________________
+
+	main.c:
+
+	int get_bandwidth(char *cmd) - functia primeste comanda cmd si extrage
+din aceasta bandwidth-ul. (set_band)
+
+	int get_index_tab(char *cmd) - functia primeste comanda cmd si extrage
+indexul tabului care urmeaza sa devina tabul curent. (change_tab)
+
+	char *get_url_goto(char *cmd) - returneaza url-ul paginii web pe care
+urmeaza sa il deschidem in tabul curent. (goto)
+
+	int entries_history_delete(char *cmd) - returneaza numarul de intrari
+pe care urmeaza sa il stergem din istoricul global. (del_history)
+
+	int index_download_resource(char *cmd) - returneaza indexul resursei
+care urmeaza sa fie introdusa in coada de prioritati pentru a fi descarcata.
+(download)
+
+	int get_seconds(char *cmd) - returneaza timpul fictiv care urmeaza sa
+treaca pentru descarcarea resurselot. (wait)
+
+	int main(int argc, char *argv[]) - este initializata coada de istoric
+global, coada de prioritati si coada de descarcari finalizate. Dupa aceea,
+urmeaza initalizarea browserului si setarea lui current_tab pe tabul deschis.
+Sunt deschise fisierele de citire si de afisare si se verifica daca au fost
+deschise. Dupa aceea cat timp nu se ajunge la finalul fisierului sunt citite
+comenzile si apelate functiile respective fiecarei comenzi. In final sunt
+distruse cozile, lista de taburi si sunt inchise fisierele.
+________________________________________________________________________________
+
+Punctaj checker local:
+Total: [85/85]
+Bonus: [20/20]
